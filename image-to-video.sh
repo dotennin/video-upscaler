@@ -3,8 +3,6 @@ FILE_NAME=$1
 FPS=$2
 IMAGE_EXTENSION=$3
 
-./validation.sh $FILE_NAME
-
 if [ -z "$FPS" ]
 then
   FPS=$(ffmpeg -i "$FILE_NAME" 2>&1 | sed -n "s/.*, \(.*\) fp.*/\1/p")
@@ -26,17 +24,19 @@ echo "progressive: $PROGRESSIVE"
 echo "==================="
 
 echo "Converting scalled images to video for $FILE_NAME..."
-# if file already exists, skip
-# if [ -f "./_output.mp4" ]; then
-#   echo "File[_output.mp4] already exists, skipping..."
-# fi
 time ffmpeg -framerate $FPS -i $DIR_NAME/frame-%03d.$IMAGE_EXTENSION -c:v libx264 -pix_fmt $PROGRESSIVE ./_output.mp4
 
-echo "Extacting origin video audio from $FILE_NAME..."
-time ffmpeg -i $FILE_NAME -q:a 0 -map a ./_output-audio.aac
-
-echo "Merging video and audio..."
-ffmpeg -i ./_output.mp4 -i ./_output-audio.aac -c copy -map 0:v:0 -map 1:a:0 ./scalled-$FILE_NAME
+ffmpeg_output=$(ffmpeg -i $FILE_NAME 2>&1)
+if echo "$ffmpeg_output" | grep -q "Stream #[0-9]*:[0-9]*.*Audio"; then
+    echo "The video file has audio content."
+    echo "Extacting origin video audio from $FILE_NAME..."
+    time ffmpeg -i $FILE_NAME -q:a 0 -map a ./_output-audio.aac
+    echo "Merging video and audio..."
+    ffmpeg -i ./_output.mp4 -i ./_output-audio.aac -c copy -map 0:v:0 -map 1:a:0 ./scalled-$FILE_NAME
+else
+    echo "The video file does not have audio content. Skipped merging video and audio."
+    mv ./_output.mp4 ./scalled-$FILE_NAME
+fi
 
 echo "Done!"
 echo "Do you need to delete temporary files? (y/n)"
