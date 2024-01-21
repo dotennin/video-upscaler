@@ -1,4 +1,3 @@
-#! /bin/sh
 FILE_NAME=$1
 FPS=$2
 IMAGE_EXTENSION=$3
