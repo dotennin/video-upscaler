@@ -36,7 +36,7 @@ function findMissingFiles(folderPath) {
 const folderPath = process.argv[2];
 
 if (!folderPath) {
-  console.error('Usage: check_files.sh <folder_path>');
+  console.error('Usage: check_files.sh <scalled-folder-path>');
   process.exit(1);
 }
 
@@ -48,10 +48,10 @@ if (missingFiles.length === 0) {
 
   execSync('mkdir -p missing_files')
   console.log('Found missing files count:', missingFiles.length);
-  console.log('Moving files:');
+  console.log('Copying to missing_files:');
 
   missingFiles.forEach(missingFile => {
-    exec(`cp -av ${folderPath}/../${missingFile.replace('.jpg', '.png')} missing_files`, (err, stdout, stderr) => {
+    exec(`rsync -avP ${folderPath.replace('scalled-', '')}/${missingFile.replace('.jpg', '.png')} missing_files`, (err, stdout, stderr) => {
         if (err) {
           console.log(`stderr: ${stderr}`)
           return
