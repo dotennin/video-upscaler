@@ -62,13 +62,14 @@ if (missingFiles.length === 0) {
 
   const missingFilesFolder = 'missing_files'
 
-  execSync(`mkdir -p ${missingFilesFolder}`)
+  execSync(`mkdir -p ${missingFilesFolder}/scalled`)
   console.log('Found missing files count:', missingFiles.length);
   console.log(`Creating symlinks in ${missingFilesFolder}:`);
 
   missingFiles.forEach(missingFile => {
-    const srcPath = `${folderPath.replace('scalled-', '')}/${missingFile.replace(/\.\w+/, '.png')}`;
-    const destPath = `${missingFilesFolder}/${missingFile.replace(/\.\w+/, '.png')}`;
+    const fileName = missingFile.replace(/\.\w+/, '.png')
+    const srcPath = `${folderPath.replace('scalled-', '')}/${fileName}`;
+    const destPath = `${missingFilesFolder}/${fileName}`;
     createSymlink(srcPath, destPath);
   });
 
