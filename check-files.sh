@@ -19,6 +19,15 @@ function findMissingFiles(folderPath) {
 
   let lastNumber = null;
   for (const file of sortedFiles) {
+    const filePath = `${folderPath}/${file}`;
+    const stats = fs.statSync(filePath);
+
+    // Check if the file size is 0
+    if (stats.size === 0) {
+      missingFiles.push(file);
+      continue;
+    }
+
     const match = file.match(/^frame-(\d+)(\..*)?$/);
     if (match) {
       const fileNumber = parseInt(match[1]);
@@ -61,4 +70,8 @@ if (missingFiles.length === 0) {
 
   // moving missing files back
   execSync(`mv ${missingFilesFolder}/scalled/* ${folderPath}`)
+
+  // removing missing files folder
+  execSync(`rm -rf ${missingFilesFolder}`)
+
 }
