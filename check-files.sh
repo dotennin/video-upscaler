@@ -44,7 +44,12 @@ function findMissingFiles(folderPath) {
 }
 
 function createSymlink(srcPath, destPath) {
-  fs.symlinkSync(srcPath, destPath);
+  try {
+    fs.symlinkSync(srcPath, destPath);
+  }
+  catch(e) {
+    console.error('Failed to create symlink:', e);
+  }
 }
 
 const folderPath = process.argv[2];
