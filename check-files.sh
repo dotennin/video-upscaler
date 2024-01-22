@@ -51,7 +51,7 @@ if (missingFiles.length === 0) {
   console.log('Copying to missing_files:');
 
   missingFiles.forEach(missingFile => {
-    exec(`rsync -avP ${folderPath.replace('scalled-', '')}/${missingFile.replace('.jpg', '.png')} missing_files`, (err, stdout, stderr) => {
+    exec(`rsync -avP ${folderPath.replace('scalled-', '')}/${missingFile.replace(/\.\w+/, '.png')} missing_files`, (err, stdout, stderr) => {
         if (err) {
           console.log(`stderr: ${stderr}`)
           return
