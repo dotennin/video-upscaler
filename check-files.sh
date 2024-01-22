@@ -43,6 +43,10 @@ function findMissingFiles(folderPath) {
   return missingFiles;
 }
 
+function createSymlink(srcPath, destPath) {
+  fs.symlinkSync(srcPath, destPath);
+}
+
 const folderPath = process.argv[2];
 
 if (!folderPath) {
@@ -60,10 +64,12 @@ if (missingFiles.length === 0) {
 
   execSync(`mkdir -p ${missingFilesFolder}`)
   console.log('Found missing files count:', missingFiles.length);
-  console.log(`Copying to ${missingFilesFolder}:`);
+  console.log(`Creating symlinks in ${missingFilesFolder}:`);
 
   missingFiles.forEach(missingFile => {
-    execSync(`rsync -avP ${folderPath.replace('scalled-', '')}/${missingFile.replace(/\.\w+/, '.png')} ${missingFilesFolder}`)
+    const srcPath = `${folderPath.replace('scalled-', '')}/${missingFile.replace(/\.\w+/, '.png')}`;
+    const destPath = `${missingFilesFolder}/${missingFile.replace(/\.\w+/, '.png')}`;
+    createSymlink(srcPath, destPath);
   });
 
   upscaleFrames(missingFilesFolder, `${missingFilesFolder}/scalled`)
