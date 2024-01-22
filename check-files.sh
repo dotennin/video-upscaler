@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { exec, execSync } = require('child_process')
+const upscaleFrames = require('./upscale-frames.sh');
 
 function findMissingFiles(folderPath) {
   const files = fs.readdirSync(folderPath);
@@ -46,18 +47,18 @@ if (missingFiles.length === 0) {
   console.log('All files are present and in sequence.');
 } else {
 
-  execSync('mkdir -p missing_files')
+  const missingFilesFolder = 'missing_files'
+
+  execSync(`mkdir -p ${missingFilesFolder}`)
   console.log('Found missing files count:', missingFiles.length);
-  console.log('Copying to missing_files:');
+  console.log(`Copying to ${missingFilesFolder}:`);
 
   missingFiles.forEach(missingFile => {
-    exec(`rsync -avP ${folderPath.replace('scalled-', '')}/${missingFile.replace(/\.\w+/, '.png')} missing_files`, (err, stdout, stderr) => {
-        if (err) {
-          console.log(`stderr: ${stderr}`)
-          return
-        }
-        console.log(`stdout: ${stdout}`)
-      }
-    )
+    execSync(`rsync -avP ${folderPath.replace('scalled-', '')}/${missingFile.replace(/\.\w+/, '.png')} ${missingFilesFolder}`)
   });
+
+  upscaleFrames(missingFilesFolder, `${missingFilesFolder}/scalled`)
+
+  // moving missing files back
+  execSync(`mv ${missingFilesFolder}/scalled/* ${folderPath}`)
 }
