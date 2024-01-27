@@ -60,7 +60,7 @@ if (missingFiles.length === 0) {
 
   execSync(`mkdir -p ${missingFilesFolder}/scalled`)
   console.log('Found missing files count:', missingFiles.length);
-  console.log(`Creating symlinks in ${missingFilesFolder}:`);
+  console.log(`copying missing files to ${missingFilesFolder}:`);
 
   missingFiles.forEach(missingFile => {
     execSync(`rsync -avP ${folderPath.replace('scalled-', '')}/${missingFile.replace(/\.\w+/, '.png')} ${missingFilesFolder}`)

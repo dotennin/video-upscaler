@@ -3,7 +3,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 
-function upscaleFrames(dirName, outputDir, suffix='webp') {
+function upscaleFrames(dirName, outputDir, suffix='jpg') {
   console.log('===================');
   console.log(`Upscaling for ${dirName}...`);
   console.log('===================');
