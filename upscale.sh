@@ -1,6 +1,6 @@
 FILE_NAME=$1
 FPS=$2
-SUFFIX=webp
+SUFFIX=jpg
 
 # check if ffmpeg exists
 if ! command -v ffmpeg &> /dev/null
@@ -57,7 +57,7 @@ function upscale_frames() {
   time ./realesrgan-ncnn-vulkan${OS_TYPE} \
           -i $DIR_NAME/ \
           -o scalled-$DIR_NAME/ \
-          -n RealESRGAN_General_x4_v3 \
+          -n 4xLSDIRCompactC3 \
           -f $SUFFIX \
           -v \
           -j 8:12:12
