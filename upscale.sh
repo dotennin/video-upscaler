@@ -57,7 +57,7 @@ function upscale_frames() {
   time ./realesrgan-ncnn-vulkan${OS_TYPE} \
           -i $DIR_NAME/ \
           -o scalled-$DIR_NAME/ \
-          -n 4xLSDIRCompactC3 \
+          -n 4xNomos8kSC \
           -f $SUFFIX \
           -v \
           -j 8:12:12
